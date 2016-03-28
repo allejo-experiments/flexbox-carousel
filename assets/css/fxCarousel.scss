@@ -1,0 +1,33 @@
+---
+---
+
+.fx-carousel__container {
+	position: relative;
+	overflow: hidden;
+}
+
+.fx-carousel {
+	display: flex;
+	position: relative;
+	left: -100%;
+	transform: translateX(100%);
+
+    .item {
+        display: flex;
+    	flex: 1 0 100%;
+        order: 2;
+
+        &.item--before {
+        	order: 1;
+        }
+    }
+
+    &#{&}--reversed {
+    	transform: translateX(-100%);
+    }
+
+    &.no-transform {
+    	transform: none;
+    	transition: transform .5s cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    }
+}

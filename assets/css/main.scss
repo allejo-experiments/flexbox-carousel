@@ -1,0 +1,33 @@
+---
+---
+
+body {
+    background-color: #efefef;
+}
+
+.arrownav {
+	text-align: center;
+}
+
+.arrownav__arrow {
+	width: 50px;
+	height: 50px;
+	position: relative;
+	display: inline-block;
+	margin-top: 15px;
+	margin-right: 25px;
+	cursor: pointer;
+	transition: all .2s ease-out;
+}
+
+.arrownav__arrow:last-child {
+	margin-right: 0;
+}
+
+.arrownav__arrow i {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 20px;
+}
