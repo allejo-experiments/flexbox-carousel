@@ -31,3 +31,15 @@ body {
 	transform: translate(-50%, -50%);
 	font-size: 20px;
 }
+
+ul {
+    margin-top: 15px;
+    padding-left: 0;
+    text-align: center;
+
+    li {
+        cursor: pointer;
+        display: inline-block;
+        font-size: 20px;
+    }
+}
