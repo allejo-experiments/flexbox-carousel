@@ -1,5 +1,5 @@
 (function($) {
-    var fxc_obj, slides, options, next, prev, cssSlide, cssActive, cssBefore, activeName, beforeName;
+    var fxc_obj, slides, options, next, prev, cssSlide, cssActive, cssBefore, activeName, beforeName, autoplay;
     var defaultOptions = {
         slideName: 'item',
         slideActive: 'active',
@@ -50,6 +50,13 @@
         }, 50);
     };
 
+    var startAutoplay = function (delay) {
+        autoplay = setTimeout(function() {
+            methods.slide('right');
+            startAutoplay(delay);
+        }, delay * 1000);
+    }
+
     var methods = {
         init: function (options) {
             fxc_obj = $(this);
@@ -64,6 +71,8 @@
             slides = fxc_obj.find(cssSlide);
             slides.first().addClass(activeName);
             slides.last().addClass(beforeName);
+
+            if (options.autoplay) { startAutoplay(options.slideTime); }
 
             return this;
         },
@@ -86,6 +95,16 @@
             var targetSlide = prev($(slides[slideNumber]));
 
             slide(targetSlide, direction);
+
+            return this;
+        },
+        pause: function () {
+            window.clearTimeout(autoplay);
+
+            return this;
+        },
+        play: function () {
+            startAutoplay(options.slideTime);
 
             return this;
         }
