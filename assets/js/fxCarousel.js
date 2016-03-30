@@ -1,8 +1,11 @@
 (function($) {
-    var fcx_obj, slides, options, next, prev;
+    var fxc_obj, slides, options, next, prev, cssSlide, cssActive, cssBefore, activeName, beforeName;
     var defaultOptions = {
-        className: '.fx-carousel',
-        slideName: '.item'
+        slideName: 'item',
+        slideActive: 'active',
+        slideBefore: 'before',
+        slideTime: 10,
+        autoplay:  true
     };
 
     var next = function (el) {
@@ -21,38 +24,68 @@
         }
     };
 
+    var slide = function (new_item, direction) {
+        fxc_obj.find(cssActive).removeClass(activeName);
+
+        if (direction === "right") {
+            fxc_obj.removeClass('fx-carousel--reversed');
+        } else {
+            fxc_obj.addClass('fx-carousel--reversed');
+        }
+
+        new_item.addClass(beforeName).css('order', 1);
+
+        for (var i = 2, items = slides.length; i <= items; i++) {
+            new_item = next(new_item).css('order', i);
+
+            if (i == 2) {
+                new_item.addClass(activeName);
+            }
+        }
+
+        fxc_obj.removeClass('no-transform');
+
+        setTimeout(function () {
+            return fxc_obj.addClass('no-transform');
+        }, 50);
+    };
+
     var methods = {
         init: function (options) {
+            fxc_obj = $(this);
             options = $.extend({}, defaultOptions, options);
-        	fcx_obj = $(options.className);
-        	slides  = fcx_obj.find(options.slideName);
+
+            cssSlide   = '.' + options.slideName;
+            activeName = options.slideName + '--' + options.slideActive;
+            beforeName = options.slideName + '--' + options.slideBefore;
+            cssActive  = '.' + activeName;
+            cssBefore  = '.' + beforeName;
+
+            slides = fxc_obj.find(cssSlide);
+            slides.first().addClass(activeName);
+            slides.last().addClass(beforeName);
 
             return this;
         },
         slide: function (direction) {
-            var el, new_item, i, j, ref;
+            var el = fxc_obj.find(cssBefore).removeClass(beforeName);
+            var new_item = (direction === "right") ? next(el) : prev(el);
 
-            el = fcx_obj.find('.item--before').removeClass('item--before');
+            slide(new_item, direction);
 
-    		if (direction === "right") {
-    			new_item = next(el);
-    			fcx_obj.removeClass('fx-carousel--reversed');
-    		} else {
-    			new_item = prev(el);
-                fcx_obj.addClass('fx-carousel--reversed');
-    		}
+            return this;
+        },
+        slideTo: function (slideNumber) {
+            var el = fxc_obj.find(cssActive);
 
-    		new_item.addClass('item--before').css('order', 1);
+            if (slideNumber === el.index()) { return; }
 
-            for (var i = 2, items = slides.length; i <= items; i++) {
-                new_item = next(new_item).css('order', i);
-            }
+            fxc_obj.find(cssBefore).removeClass(beforeName);
 
-    		fcx_obj.removeClass('no-transform');
+            var direction = (slideNumber > el.index()) ? "right" : "left";
+            var targetSlide = prev($(slides[slideNumber]));
 
-            setTimeout(function () {
-                return fcx_obj.addClass('no-transform');
-            }, 50);
+            slide(targetSlide, direction);
 
             return this;
         }
